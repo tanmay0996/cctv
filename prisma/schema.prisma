@@ -1,0 +1,26 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Camera {
+  id        String     @id @default(uuid())
+  name      String
+  location  String
+  incidents Incident[]
+}
+
+model Incident {
+  id           String   @id @default(uuid())
+  type         String
+  tsStart      DateTime
+  tsEnd        DateTime
+  thumbnailUrl String
+  resolved     Boolean  @default(false)
+  camera       Camera   @relation(fields: [cameraId], references: [id])
+  cameraId     String
+}
