@@ -43,14 +43,14 @@ export default function Navbar() {
       </div>
 
       {/* Right avatars */}
-      <div className="flex items-center space-x-[-8px] mr-2">
+      {/* <div className="flex items-center space-x-[-8px] mr-2">
         <div className="w-6 h-6 rounded-full bg-yellow-500 flex items-center justify-center text-sm font-bold text-black border-2 border-black">V</div>
         <div className="w-6 h-6 rounded-full bg-red-500 flex items-center justify-center text-sm font-bold text-white border-2 border-black">S</div>
-      </div>
+      </div> */}
 
       {/* Count badge */}
       <div className="w-6 h-6 rounded-full bg-gray-700 text-white text-xs flex items-center justify-center border border-white">
-        2
+        O
       </div>
     </header>
   );
