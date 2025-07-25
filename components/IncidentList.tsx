@@ -20,9 +20,8 @@ export default function IncidentList() {
   const [resolvingIds, setResolvingIds] = useState<Set<string>>(new Set());
   const [loading, setLoading] = useState(true);
 
-  // Fetch unresolved incidents
   useEffect(() => {
-    fetch("/api/incidents?resolved=false")
+    fetch("/api/incidents") // fetch ALL incidents now
       .then((r) => r.json())
       .then((data: Incident[]) => {
         setIncidents(data);
@@ -38,17 +37,18 @@ export default function IncidentList() {
 
     // 2) Wait for fade duration, then remove from list
     setTimeout(() => {
-      setIncidents((prev) => prev.filter((i) => i.id !== id));
+      setIncidents((prev) =>
+        prev.map((i) => (i.id === id ? { ...i, resolved: true } : i))
+      );
       setResolvingIds((prev) => {
         const next = new Set(prev);
         next.delete(id);
         return next;
       });
-    }, 500); // match your CSS transition-duration
+    }, 500); // match CSS transition-duration
 
     // 3) Fire‑and‑forget API call
     fetch(`/api/incidents/${id}/resolve`, { method: "PATCH" }).catch(() => {
-      // (optional) handle rollback or show error
       console.error("Failed to resolve incident", id);
     });
   };
@@ -57,20 +57,25 @@ export default function IncidentList() {
     return (
       <div className="text-center py-10 text-text-secondary">Loading…</div>
     );
-  if (!incidents.length)
+
+  const unresolvedIncidents = incidents.filter((i) => !i.resolved);
+  const resolvedIncidents = incidents.filter((i) => i.resolved);
+
+  if (!unresolvedIncidents.length)
     return (
       <div className="text-center py-10 text-text-secondary">
         No incidents.
       </div>
     );
 
-  const unresolved = incidents.length;
-
   return (
     <div className="bg-surface rounded-lg p-4 flex flex-col h-full">
-      <IncidentListHeader count={unresolved} resolvedCount={4 /* or dynamic */} />
+      <IncidentListHeader
+        count={unresolvedIncidents.length}
+        resolvedCount={resolvedIncidents.length}
+      />
       <div className="overflow-auto space-y-2">
-        {incidents.map((incident) => (
+        {unresolvedIncidents.map((incident) => (
           <IncidentCard
             key={incident.id}
             incident={incident}

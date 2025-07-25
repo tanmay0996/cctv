@@ -24,7 +24,7 @@ export default function IncidentPlayer() {
       </div>
 
       {/* Controls bar */}
-      <div className="bg-bg-dark rounded-lg p-2 flex items-center space-x-4">
+      {/* <div className="bg-bg-dark rounded-lg p-2 flex items-center space-x-4">
         <button className="text-text-secondary hover:text-white">⏮️</button>
         <button className="text-text-secondary hover:text-white">🔊</button>
         <button className="text-white bg-gold p-2 rounded-full">▶️</button>
@@ -32,7 +32,7 @@ export default function IncidentPlayer() {
         <span className="text-text-secondary text-xs">03:12:37 (15‑Jun‑2025)</span>
         <span className="ml-auto text-text-secondary text-xs">1x</span>
         <button className="text-text-secondary hover:text-white">⏳</button>
-      </div>
+      </div> */}
     </div>
 )
 }
