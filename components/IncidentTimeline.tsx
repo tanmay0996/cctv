@@ -36,32 +36,32 @@ export default function IncidentTimeline() {
       {
         id: "1",
         type: "Gun Threat",
-        tsStart: "2025-06-15T02:30:00Z",
-        tsEnd: "2025-06-15T02:45:00Z",
+        tsStart: "2025-07-25T02:30:00Z",
+        tsEnd: "2025-07-25T02:45:00Z",
         camera: { name: "Camera-01" },
         resolved: false
       },
       {
         id: "2",
         type: "Unauthorised Access",
-        tsStart: "2025-06-15T08:15:00Z",
-        tsEnd: "2025-06-15T08:30:00Z",
+        tsStart: "2025-07-25T08:15:00Z",
+        tsEnd: "2025-07-25T08:30:00Z",
         camera: { name: "Camera-02" },
         resolved: false
       },
       {
         id: "3",
         type: "Face Recognised",
-        tsStart: "2025-06-15T14:20:00Z",
-        tsEnd: "2025-06-15T14:25:00Z",
+        tsStart: "2025-07-25T14:20:00Z",
+        tsEnd: "2025-07-25T14:25:00Z",
         camera: { name: "Camera-01" },
         resolved: true
       },
       {
         id: "4",
         type: "Traffic Congestion",
-        tsStart: "2025-06-15T18:45:00Z",
-        tsEnd: "2025-06-15T19:15:00Z",
+        tsStart: "2025-07-25T18:45:00Z",
+        tsEnd: "2025-07-25T19:15:00Z",
         camera: { name: "Camera-03" },
         resolved: false
       }
@@ -130,7 +130,7 @@ export default function IncidentTimeline() {
     if (!containerRef.current) return;
     
     setIsDragging(false);
-    // Snap to nearest 5-minute mark
+    // Snap to nearest 5-minute mark (this is the "snap video on drag" functionality)
     const containerWidth = containerRef.current.getBoundingClientRect().width;
     const snapInterval = (5 / 60) * (containerWidth / 24); // 5 minutes in pixels
     const snappedOffset = Math.round(nowOffset / snapInterval) * snapInterval;
@@ -209,6 +209,8 @@ export default function IncidentTimeline() {
   // Function to get appropriate display text based on available width
   const getDisplayText = (type: string, availableWidth: number) => {
     // Always try to show full name on desktop, abbreviate only on mobile if needed
+    if (typeof window === 'undefined') return type;
+    
     const isMobile = window.innerWidth < 640;
     
     if (!isMobile) {
@@ -236,6 +238,19 @@ export default function IncidentTimeline() {
     return abbrev.length <= maxChars ? abbrev : type.substring(0, maxChars);
   };
 
+  // Calculate the left sidebar width (camera name column)
+  const getSidebarWidth = () => {
+    if (typeof window === 'undefined') return 128;
+    return window.innerWidth < 640 ? 96 : 128; // 24*4 = 96px on mobile, 32*4 = 128px on desktop
+  };
+
+  // Calculate scrubber position as percentage for consistent positioning
+  const getScrubberPositionPercent = () => {
+    if (!containerRef.current) return 0;
+    const containerWidth = containerRef.current.getBoundingClientRect().width;
+    return (nowOffset / containerWidth) * 100;
+  };
+
   return (
     <div className="bg-black text-white min-h-screen">
       {/* Video Controls Header */}
@@ -254,7 +269,7 @@ export default function IncidentTimeline() {
             <SkipForward className="w-3 h-3 sm:w-4 sm:h-4" />
           </button>
           <div className="text-xs sm:text-sm font-mono">
-            {currentTime}({currentDate})
+            {currentTime} ({currentDate})
           </div>
         </div>
         
@@ -361,27 +376,35 @@ export default function IncidentTimeline() {
             
             {/* Current time scrubber */}
             <g>
-              <line
-                x1={nowOffset * (TOTAL_WIDTH / (containerRef.current?.getBoundingClientRect().width || TOTAL_WIDTH))}
-                y1="0"
-                x2={nowOffset * (TOTAL_WIDTH / (containerRef.current?.getBoundingClientRect().width || TOTAL_WIDTH))}
-                y2="60"
-                stroke="#fbbf24"
-                strokeWidth="2"
-              />
-              <polygon
-                points={`${nowOffset * (TOTAL_WIDTH / (containerRef.current?.getBoundingClientRect().width || TOTAL_WIDTH))-4},0 ${nowOffset * (TOTAL_WIDTH / (containerRef.current?.getBoundingClientRect().width || TOTAL_WIDTH))+4},0 ${nowOffset * (TOTAL_WIDTH / (containerRef.current?.getBoundingClientRect().width || TOTAL_WIDTH))},8`}
-                fill="#fbbf24"
-              />
-              <circle
-                cx={nowOffset * (TOTAL_WIDTH / (containerRef.current?.getBoundingClientRect().width || TOTAL_WIDTH))}
-                cy="30"
-                r="6"
-                fill="#fbbf24"
-                stroke="#1f2937"
-                strokeWidth="2"
-                className="cursor-grab active:cursor-grabbing"
-              />
+              {(() => {
+                const containerWidth = containerRef.current?.getBoundingClientRect().width || TOTAL_WIDTH;
+                const scrubberX = (nowOffset / containerWidth) * TOTAL_WIDTH;
+                return (
+                  <>
+                    <line
+                      x1={scrubberX}
+                      y1="0"
+                      x2={scrubberX}
+                      y2="60"
+                      stroke="#fbbf24"
+                      strokeWidth="2"
+                    />
+                    <polygon
+                      points={`${scrubberX-4},0 ${scrubberX+4},0 ${scrubberX},8`}
+                      fill="#fbbf24"
+                    />
+                    <circle
+                      cx={scrubberX}
+                      cy="30"
+                      r="6"
+                      fill="#fbbf24"
+                      stroke="#1f2937"
+                      strokeWidth="2"
+                      className="cursor-grab active:cursor-grabbing"
+                    />
+                  </>
+                );
+              })()}
             </g>
           </svg>
         </div>
@@ -395,7 +418,7 @@ export default function IncidentTimeline() {
         </div>
         
         <div className="overflow-hidden">
-          <div className="w-full">
+          <div className="w-full relative">
             {/* Time Ruler */}
             <div className="relative h-12 border-b border-gray-700 bg-black">
               <div className="absolute top-0 left-0 w-24 sm:w-32 h-full bg-black border-r border-gray-700 z-10"></div>
@@ -409,18 +432,11 @@ export default function IncidentTimeline() {
                   </div>
                 ))}
               </div>
-              {/* Current time scrubber */}
-              <div
-                className="absolute top-0 h-full border-l-2 border-yellow-400 z-20"
-                style={{ left: `calc(${(24 + 8) / 16 * 100}% + ${(nowOffset / (containerRef.current?.getBoundingClientRect().width || 1)) * (100 - (24 + 8) / 16 * 100)}%)` }}
-              >
-                <div className="absolute -top-1 -left-1 w-2 h-2 bg-yellow-400 rotate-45"></div>
-              </div>
             </div>
 
             {/* Camera Rows */}
             {cameras.map((cam, index) => (
-              <div key={cam} className="relative flex items-center h-20 sm:h-17 border-b border-gray-700 hover:bg-gray-800/50 transition-colors">
+              <div key={cam} className="relative flex items-center h-20 sm:h-16 border-b border-gray-700 hover:bg-gray-800/50 transition-colors">
                 <div className="w-24 sm:w-32 flex-shrink-0 px-2 sm:px-2.5 text-gray-200 font-medium flex items-center gap-1 sm:gap-2 border-r border-gray-700 bg-gray-900">
                   <Camera className="w-3 h-3 sm:w-4 sm:h-4 text-gray-400" />
                   <span className="text-xs sm:text-sm">Camera - {String(index + 1).padStart(2, '0')}</span>
@@ -428,7 +444,8 @@ export default function IncidentTimeline() {
                 <div className="relative flex-1 h-full">
                   {incidents.filter(i => i.camera.name === cam).map(inc => {
                     const containerWidth = containerRef.current?.getBoundingClientRect().width || 1;
-                    const timelineWidth = containerWidth - (window.innerWidth < 640 ? 96 : 128);
+                    const sidebarWidth = getSidebarWidth();
+                    const timelineWidth = containerWidth - sidebarWidth;
                     const left = `${(getOffset(inc.tsStart, timelineWidth) / timelineWidth) * 100}%`;
                     const widthPercent = Math.max(((getOffset(inc.tsEnd, timelineWidth) - getOffset(inc.tsStart, timelineWidth)) / timelineWidth) * 100, 15);
                     const width = `${widthPercent}%`;
@@ -441,7 +458,7 @@ export default function IncidentTimeline() {
                     return (
                       <div
                         key={inc.id}
-                        className={`absolute top-3 sm:top-4 h-14 sm:h-8 px-3 sm:px-4 flex items-center text-sm sm:text-base font-medium rounded-2xl shadow-sm ${colorClass} ${inc.resolved ? "opacity-60" : "opacity-100"} hover:opacity-80 transition-all cursor-pointer`}
+                        className={`absolute top-3 sm:top-4 h-14 sm:h-8 px-3 sm:px-4 flex items-center text-sm sm:text-base font-medium rounded-2xl shadow-sm ${colorClass} ${inc.resolved ? "opacity-60" : "opacity-100"} hover:opacity-80 transition-all cursor-pointer z-10`}
                         style={{ left, width, minWidth: '120px' }}
                         title={`${inc.type} - ${inc.camera.name}`}
                       >
@@ -454,6 +471,30 @@ export default function IncidentTimeline() {
                 </div>
               </div>
             ))}
+            
+            {/* UNIFIED: Single continuous scrubber line spanning entire timeline */}
+            {(() => {
+              const scrubberPercent = getScrubberPositionPercent();
+              const sidebarWidth = getSidebarWidth();
+              const timelineStart = sidebarWidth;
+              const timelineWidth = (containerRef.current?.getBoundingClientRect().width || window.innerWidth) - sidebarWidth;
+              const scrubberLeft = timelineStart + (scrubberPercent / 100) * timelineWidth;
+              const totalHeight = 48 + (cameras.length * (typeof window !== 'undefined' && window.innerWidth < 640 ? 80 : 64));
+              
+              return (
+                <div
+                  className="absolute border-l-2 border-yellow-400 z-30 pointer-events-none"
+                  style={{ 
+                    left: `${scrubberLeft}px`,
+                    top: '0px',
+                    height: `${totalHeight}px`
+                  }}
+                >
+                  {/* Triangle indicator at the top */}
+                  <div className="absolute -top-1 -left-1 w-2 h-2 bg-yellow-400 rotate-45"></div>
+                </div>
+              );
+            })()}
           </div>
         </div>
       </div>
