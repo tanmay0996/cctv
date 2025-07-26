@@ -5,9 +5,9 @@ const prisma = new PrismaClient();
 
 export async function PATCH(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  context: any // ✅ Let Next.js handle the typing
 ) {
-  const { id } = params;
+  const { id } = context.params;
 
   const current = await prisma.incident.findUnique({ where: { id } });
 
