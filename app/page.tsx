@@ -14,12 +14,12 @@ export default function Home() {
         {/* Top section: column on mobile, row on md+ */}
         <div className="flex flex-col md:flex-row gap-4 h-auto md:h-[60vh] min-h-0">
           {/* Player (full-width mobile, 2/3 on md+) */}
-          <div className="w-full md:w-2/3 h-64 md:h-full overflow-hidden rounded-lg">
+          <div className="w-full md:w-2/4 h-64 md:h-full overflow-hidden rounded-lg">
             <IncidentPlayer />
           </div>
 
           {/* List (full-width mobile, 1/3 on md+) */}
-          <div className="w-full md:w-1/3 h-64 md:h-full min-h-0 overflow-y-auto scrollbar-hidden rounded-lg">
+          <div className="w-full md:w-2/4 h-64 md:h-full min-h-0 overflow-y-auto scrollbar-hidden rounded-lg">
             <IncidentList />
           </div>
         </div>
