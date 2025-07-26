@@ -18,7 +18,9 @@ export default function Navbar() {
 
   return (
     <>
-      <header className="bg-gradient-to-r from-[#111111] to-[#D2AE48] flex items-center px-4 sm:px-6 py-4 relative">
+      <header className="flex items-center px-4 sm:px-6 py-4 relative" style={{
+        background: 'linear-gradient(to right, #111111 0%, #D2AE48 65%, #111111 89%)'
+      }}>
         {/* Left avatar */}
         <div className="w-8 h-8 rounded-full border-2 border-white overflow-hidden mr-4">
           <img
@@ -29,10 +31,10 @@ export default function Navbar() {
         </div>
 
         {/* Brand Name */}
-        <div className="text-xl font-bold text-white mr-8">MANDLACX</div>
+        <div className="text-xl font-bold text-white">MANDLACX</div>
 
-        {/* Desktop Nav Items - Hidden on mobile/tablet */}
-        <nav className="hidden lg:flex gap-6">
+        {/* Desktop Nav Items - Centered */}
+        <nav className="hidden lg:flex gap-6 flex-1 justify-center">
           {navItems.map((item, index) => (
             <a
               key={index}
@@ -47,32 +49,40 @@ export default function Navbar() {
           ))}
         </nav>
 
-        {/* Spacer */}
-        <div className="flex-1" />
-
         {/* Desktop Right Side Items */}
-        <div className="hidden lg:flex items-center">
-          {/* Moon icon */}
-          <div className="text-gray-300 mr-4 hover:text-white cursor-pointer">
-            <Moon size={18} />
-          </div>
-
-          {/* Count badge */}
-          <div className="w-6 h-6 rounded-full bg-gray-700 text-white text-xs flex items-center justify-center border border-white">
-            O
-          </div>
-        </div>
-
-        {/* Mobile/Tablet Right Side */}
-        <div className="flex lg:hidden items-center gap-4">
+        <div className="hidden lg:flex items-center gap-4">
           {/* Moon icon */}
           <div className="text-gray-300 hover:text-white cursor-pointer">
             <Moon size={18} />
           </div>
 
-          {/* Count badge */}
-          <div className="w-6 h-6 rounded-full bg-gray-700 text-white text-xs flex items-center justify-center border border-white">
-            O
+          {/* Profile Section */}
+          <div className="flex items-center gap-3 px-3 py-2 rounded-lg backdrop-blur-sm">
+            <div className="w-8 h-8 rounded-full bg-gray-600 flex items-center justify-center text-white text-sm font-medium">
+              👤
+            </div>
+            <div className="text-left">
+              <div className="text-white text-sm font-medium">Mohammed Ajhas</div>
+              <div className="text-gray-300 text-xs">ajhas@mandlac.com</div>
+            </div>
+            <div className="text-gray-300">
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor">
+                <path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        {/* Mobile/Tablet Right Side */}
+        <div className="flex lg:hidden items-center gap-3 ml-auto">
+          {/* Moon icon */}
+          <div className="text-gray-300 hover:text-white cursor-pointer">
+            <Moon size={18} />
+          </div>
+
+          {/* Mobile Profile */}
+          <div className="w-8 h-8 rounded-full bg-gray-600 flex items-center justify-center text-white text-sm">
+            👤
           </div>
 
           {/* Hamburger Menu Button */}
@@ -115,7 +125,7 @@ export default function Navbar() {
                     onClick={toggleMenu}
                     className={`flex items-center gap-3 p-3 rounded-lg transition-colors ${
                       item.active
-                        ? "bg-gray-800 bg-opacity-20 text-yellow-400"
+                        ? "bg-gray-700 bg-opacity-20 text-yellow-400"
                         : "text-gray-300 hover:text-white hover:bg-gray-800"
                     }`}
                   >
@@ -127,17 +137,18 @@ export default function Navbar() {
 
               {/* Menu Footer */}
               <div className="mt-8 pt-6 border-t border-gray-700">
-                <div className="flex items-center gap-3 p-3 text-gray-300">
-                  <div className="w-8 h-8 rounded-full border-2 border-gray-600 overflow-hidden">
-                    <img
-                      src="/avatar1.jpg"
-                      alt="User"
-                      className="w-full h-full object-cover"
-                    />
+                <div className="flex items-center gap-3 p-3 text-gray-300 hover:bg-gray-800 rounded-lg transition-colors cursor-pointer">
+                  <div className="w-10 h-10 rounded-full bg-gray-600 flex items-center justify-center text-white text-lg">
+                    👤
                   </div>
-                  <div>
-                    <div className="font-medium text-white">User Profile</div>
-                    <div className="text-sm text-gray-400">Settings & More</div>
+                  <div className="flex-1">
+                    <div className="font-medium text-white">Mohammed Ajhas</div>
+                    <div className="text-sm text-gray-400">ajhas@mandlac.com</div>
+                  </div>
+                  <div className="text-gray-400">
+                    <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor">
+                      <path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
                   </div>
                 </div>
               </div>
