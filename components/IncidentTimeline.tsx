@@ -25,7 +25,7 @@ export default function IncidentTimeline() {
   const [currentTime, setCurrentTime] = useState("03:12:37");
   const [currentDate] = useState("25-July-2025");
   const [isDragging, setIsDragging] = useState(false);
-  const [dragOffset, setDragOffset] = useState(0);
+  // const [dragOffset, setDragOffset] = useState(0);
   const rulerRef = useRef<SVGSVGElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -94,7 +94,7 @@ export default function IncidentTimeline() {
     const clampedX = Math.max(0, Math.min(x, containerRect.width));
     
     setIsDragging(true);
-    setDragOffset(clampedX);
+    // setDragOffset(clampedX);
     setNowOffset(clampedX);
     
     // Update time based on drag position
@@ -114,7 +114,7 @@ export default function IncidentTimeline() {
     const x = e.clientX - svgRect.left;
     const clampedX = Math.max(0, Math.min(x, containerRect.width));
     
-    setDragOffset(clampedX);
+    // setDragOffset(clampedX);
     setNowOffset(clampedX);
     
     // Update time based on drag position
@@ -135,7 +135,7 @@ export default function IncidentTimeline() {
     const snapInterval = (5 / 60) * (containerWidth / 24); // 5 minutes in pixels
     const snappedOffset = Math.round(nowOffset / snapInterval) * snapInterval;
     setNowOffset(snappedOffset);
-    setDragOffset(snappedOffset);
+    // setDragOffset(snappedOffset);
     
     // Update time to snapped position
     const hours = (snappedOffset / containerWidth) * 24;
@@ -154,7 +154,7 @@ export default function IncidentTimeline() {
       const x = e.clientX - svgRect.left;
       const clampedX = Math.max(0, Math.min(x, containerRect.width));
       
-      setDragOffset(clampedX);
+      // setDragOffset(clampedX);
       setNowOffset(clampedX);
       
       const hours = (clampedX / containerRect.width) * 24;
