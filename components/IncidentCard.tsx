@@ -31,49 +31,58 @@ export default function IncidentCard({
 
   return (
     <div
-      className={`flex items-center gap-4 p-4 rounded-xl bg-black shadow-sm border border-gray-800 hover:shadow-lg hover:border-gray-700 transition-all duration-300 ${
+      className={`flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 p-3 sm:p-4 rounded-xl bg-black shadow-sm border border-gray-800 hover:shadow-lg hover:border-gray-700 transition-all duration-300 ${
         resolving ? 'opacity-0 scale-95' : 'opacity-100 scale-100'
       }`}
     >
-      {/* Thumbnail Image Placeholder */}
-      <img
-  src={thumbnailUrl || PLACEHOLDER_URL}
-  onError={(e) => {
-    e.currentTarget.onerror = null
-    e.currentTarget.src = PLACEHOLDER_URL
-  }}
-  alt="CCTV footage"
-  className="w-24 h-16 object-cover rounded-lg"
-/>
+      {/* Mobile/Tablet Layout: Image and Content Row */}
+      <div className="flex items-center gap-3 w-full sm:flex-1">
+        {/* Thumbnail Image */}
+        <img
+          src={thumbnailUrl || PLACEHOLDER_URL}
+          onError={(e) => {
+            e.currentTarget.onerror = null
+            e.currentTarget.src = PLACEHOLDER_URL
+          }}
+          alt="CCTV footage"
+          className="w-16 h-12 sm:w-24 sm:h-16 object-cover rounded-lg flex-shrink-0"
+        />
 
-
-      {/* Content */}
-      <div className="flex-1 space-y-2">
-        <div className="flex items-center gap-2">
-          {Icon && <Icon className="h-4 w-4 text-gray-400" />}
-          <span className={`px-2.5 py-1 rounded-full text-xs font-medium ${badge}`}>
-            {type}
-          </span>
-        </div>
-        <div className="text-gray-100 font-semibold text-base">{camera.name || 'Unknown Camera'}</div>
-        <div className="text-gray-400 text-sm">
-          {tsStart && tsEnd ? (
-            <>
-              {new Date(tsStart).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} –{' '}
-              {new Date(tsEnd).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-            </>
-          ) : (
-            'Time not available'
-          )}
+        {/* Content */}
+        <div className="flex-1 space-y-1 sm:space-y-2 min-w-0">
+          <div className="flex items-center gap-2 flex-wrap">
+            {Icon && <Icon className="h-3 w-3 sm:h-4 sm:w-4 text-gray-400 flex-shrink-0" />}
+            <span className={`px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full text-xs font-medium ${badge} whitespace-nowrap`}>
+              {type}
+            </span>
+          </div>
+          <div className="text-gray-100 font-semibold text-sm sm:text-base truncate">
+            {camera.name || 'Unknown Camera'}
+          </div>
+          <div className="text-gray-400 text-xs sm:text-sm">
+            {tsStart && tsEnd ? (
+              <>
+                <span className="hidden sm:inline">
+                  {new Date(tsStart).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} –{' '}
+                  {new Date(tsEnd).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                </span>
+                <span className="sm:hidden">
+                  {new Date(tsStart).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                </span>
+              </>
+            ) : (
+              'Time not available'
+            )}
+          </div>
         </div>
       </div>
 
       {/* Resolve Button */}
-      <div className="flex-shrink-0">
+      <div className="flex-shrink-0 w-full sm:w-auto">
         <button
           onClick={() => onResolve(id)}
           disabled={!id}
-          className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 disabled:from-gray-600 disabled:to-gray-600 disabled:cursor-not-allowed text-white font-medium text-sm rounded-lg transition-all duration-200 hover:shadow-md hover:scale-105 active:scale-95 disabled:hover:scale-100"
+          className="flex items-center justify-center gap-2 px-3 sm:px-4 py-2 w-full sm:w-auto bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 disabled:from-gray-600 disabled:to-gray-600 disabled:cursor-not-allowed text-white font-medium text-sm rounded-lg transition-all duration-200 hover:shadow-md hover:scale-105 active:scale-95 disabled:hover:scale-100"
         >
           Resolve
           <ArrowRight className="h-4 w-4" />
