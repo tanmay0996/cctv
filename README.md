@@ -1,36 +1,46 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+1. Deployment Instructions
+Frontend & API are deployed using Vercel.
 
-## Getting Started
+Database: Supabase (PostgreSQL) handles data storage and auth.
 
-First, run the development server:
+Environment variables used:
+DATABASE_URL=your_supabase_postgres_url
+DIRECT_URL=your_direct_connection_url
 
-```bash
+To run locally:
+
+bash
+
+git clone https://github.com/your-username/tanmay0996-cctv.git
+cd tanmay0996-cctv
+npm install
+npx prisma generate
+npx prisma db push
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+2. Tech Decisions
+Next.js (App Router): Simplified routing, API handling, server/client split
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+TypeScript: Strict typing and better developer experience
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Tailwind CSS: Utility-first styling, responsive by design
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Prisma ORM: Schema-first, easy DB access
 
-## Learn More
+Supabase (PostgreSQL): Fully hosted DB and backend service
 
-To learn more about Next.js, take a look at the following resources:
+Vercel: Seamless CI/CD and edge deployments
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+SVG-based Timeline: Chosen for performance, flexibility in drawing
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+3. If I Had More Time…
+🧱 Implement 3D Camera Layout Visualization using React Three Fiber
 
-## Deploy on Vercel
+🧑‍💻 Add proper authentication and role-based access on the backend
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+🎨 Polish UI with interactive transitions and Framer Motion
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+🔎 Add zoom/scroll support on the timeline for finer control
+
+🧪 Include unit/integration tests (Jest + React Testing Library)
+
+📥 Improve timeline with hover thumbnails and incident filtering
