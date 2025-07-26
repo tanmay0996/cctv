@@ -1,12 +1,15 @@
 import { NextResponse, NextRequest } from "next/server";
 import { PrismaClient } from "@prisma/client";
 
-const prisma = new PrismaClient();
+// 🔧 Safe PrismaClient reuse
+const globalForPrisma = globalThis as unknown as {
+  prisma: PrismaClient | undefined;
+};
 
-export async function PATCH(
-  req: NextRequest,
-  context: any // ✅ Let Next.js handle the typing
-) {
+const prisma = globalForPrisma.prisma ?? new PrismaClient();
+if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
+
+export async function PATCH(req: NextRequest, context: any) {
   const { id } = context.params;
 
   const current = await prisma.incident.findUnique({ where: { id } });

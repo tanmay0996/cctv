@@ -171,16 +171,18 @@ export default function IncidentTimeline() {
       }
     };
 
-    if (isDragging) {
+    if (isDragging && typeof window !== 'undefined') {
       document.addEventListener('mousemove', handleGlobalMouseMove);
       document.addEventListener('mouseup', handleGlobalMouseUp);
     }
 
     return () => {
-      document.removeEventListener('mousemove', handleGlobalMouseMove);
-      document.removeEventListener('mouseup', handleGlobalMouseUp);
+      if (typeof window !== 'undefined') {
+        document.removeEventListener('mousemove', handleGlobalMouseMove);
+        document.removeEventListener('mouseup', handleGlobalMouseUp);
+      }
     };
-  }, [isDragging, nowOffset]);
+  }, [isDragging, nowOffset, handleMouseUp]);
 
   console.log("Rendering timeline with", incidents.length, "incidents");
 
@@ -477,7 +479,7 @@ export default function IncidentTimeline() {
               const scrubberPercent = getScrubberPositionPercent();
               const sidebarWidth = getSidebarWidth();
               const timelineStart = sidebarWidth;
-              const timelineWidth = (containerRef.current?.getBoundingClientRect().width || window.innerWidth) - sidebarWidth;
+              const timelineWidth = (containerRef.current?.getBoundingClientRect().width || (typeof window !== 'undefined' ? window.innerWidth : 1024)) - sidebarWidth;
               const scrubberLeft = timelineStart + (scrubberPercent / 100) * timelineWidth;
               const totalHeight = 48 + (cameras.length * (typeof window !== 'undefined' && window.innerWidth < 640 ? 80 : 64));
               
