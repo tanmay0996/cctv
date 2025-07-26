@@ -1,30 +1,31 @@
-import React from 'react';
-import Navbar from '@/components/Navbar';
-import IncidentPlayer from '@/components/IncidentPlayer';
-import IncidentTimeline from '@/components/IncidentTimeline';
-import IncidentList from '@/components/IncidentList';
+"use client";
+import React from "react";
+import Navbar from "@/components/Navbar";
+import IncidentPlayer from "@/components/IncidentPlayer";
+import IncidentTimeline from "@/components/IncidentTimeline";
+import IncidentList from "@/components/IncidentList";
 
 export default function Home() {
   return (
-    <div className="flex flex-col h-screen">
+    <div className="flex flex-col h-screen w-full">
       <Navbar />
 
-      <main className="flex flex-col flex-1 gap-4 p-4 bg-black">
-        {/* Top: exactly 33% of the viewport height, with internal scrolling */}
-        <div className="flex lg:flex-row flex-col gap-4 h-[55vh] min-h-0">
-          {/* Player: 65% width, fills full height */}
-          <div className="basis-[65%] h-full overflow-hidden">
+      <main className="flex flex-col flex-1 gap-4 p-2 sm:p-4 bg-black">
+        {/* Top section: column on mobile, row on md+ */}
+        <div className="flex flex-col md:flex-row gap-4 h-auto md:h-[60vh] min-h-0">
+          {/* Player (full-width mobile, 2/3 on md+) */}
+          <div className="w-full md:w-2/3 h-64 md:h-full overflow-hidden rounded-lg">
             <IncidentPlayer />
           </div>
 
-          {/* List: 35% width, fills full height and scrolls internally */}
-          <div className="basis-[35%] h-full overflow-y-auto min-h-0 scrollbar-hidden">
+          {/* List (full-width mobile, 1/3 on md+) */}
+          <div className="w-full md:w-1/3 h-64 md:h-full min-h-0 overflow-y-auto scrollbar-hidden rounded-lg">
             <IncidentList />
           </div>
         </div>
 
-        {/* Timeline: fixed 6 rem tall, never shrinks */}
-        <div className="h-24 flex-shrink-0">
+        {/* Timeline (auto height on mobile, fixed on md+) */}
+        <div className="h-20 md:h-24 flex-shrink-0">
           <IncidentTimeline />
         </div>
       </main>
