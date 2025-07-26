@@ -1,4 +1,5 @@
 1. Deployment Instructions
+   
 Frontend & API are deployed using Vercel.
 
 Database: Supabase (PostgreSQL) handles data storage and auth.
@@ -17,6 +18,9 @@ npm install
 npx prisma generate
 npx prisma db push
 npm run dev
+
+
+
 2. Tech Decisions
 Next.js (App Router): Simplified routing, API handling, server/client split
 
@@ -31,6 +35,8 @@ Supabase (PostgreSQL): Fully hosted DB and backend service
 Vercel: Seamless CI/CD and edge deployments
 
 SVG-based Timeline: Chosen for performance, flexibility in drawing
+
+
 
 3. If I Had More Time…
 🧱 Implement 3D Camera Layout Visualization using React Three Fiber
