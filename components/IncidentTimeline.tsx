@@ -23,7 +23,7 @@ export default function IncidentTimeline() {
   const [nowOffset, setNowOffset] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState("03:12:37");
-  const [currentDate] = useState("15-Jun-2025");
+  const [currentDate] = useState("25-July-2025");
   const [isDragging, setIsDragging] = useState(false);
   const [dragOffset, setDragOffset] = useState(0);
   const rulerRef = useRef<SVGSVGElement>(null);
@@ -59,7 +59,7 @@ export default function IncidentTimeline() {
       },
       {
         id: "4",
-        type: "Traffic congestion",
+        type: "Traffic Congestion",
         tsStart: "2025-06-15T18:45:00Z",
         tsEnd: "2025-06-15T19:15:00Z",
         camera: { name: "Camera-03" },
@@ -194,33 +194,63 @@ export default function IncidentTimeline() {
   const getIncidentColor = (type: string) => {
     switch (type) {
       case "Gun Threat":
-        return "bg-red-600 border-red-500";
+        return "bg-red-900/20 text-red-400 border border-red-800/30";
       case "Unauthorised Access":
-        return "bg-orange-600 border-orange-500";
+        return "bg-amber-900/20 text-amber-400 border border-amber-800/30";
       case "Face Recognised":
-        return "bg-[#232323]600 border-gray-500"; // Changed from blue to gray
-      case "Traffic congestion":
-        return "bg-teal-600 border-teal-500";
+        return "bg-blue-900/20 text-blue-400 border border-blue-800/30";
+      case "Traffic Congestion":
+        return "bg-emerald-900/20 text-emerald-400 border border-emerald-800/30";
       default:
-        return "bg-[#232323]600 border-gray-500";
+        return "bg-gray-900/20 text-gray-400 border border-gray-800/30";
     }
+  };
+
+  // Function to get appropriate display text based on available width
+  const getDisplayText = (type: string, availableWidth: number) => {
+    // Always try to show full name on desktop, abbreviate only on mobile if needed
+    const isMobile = window.innerWidth < 640;
+    
+    if (!isMobile) {
+      // On desktop, always show full name
+      return type;
+    }
+    
+    // On mobile, check if we have enough space for full name
+    const charWidth = 6;
+    const maxChars = Math.floor((availableWidth - 16) / charWidth); // -16 for padding
+    
+    if (type.length <= maxChars) {
+      return type;
+    }
+    
+    // Mobile abbreviations only when really needed
+    const abbreviations: Record<string, string> = {
+      "Gun Threat": "Gun Threat",
+      "Unauthorised Access": "Unauth Access",
+      "Face Recognised": "Face Recog",
+      "Traffic Congestion": "Traffic"
+    };
+    
+    const abbrev = abbreviations[type] || type;
+    return abbrev.length <= maxChars ? abbrev : type.substring(0, maxChars);
   };
 
   return (
     <div className="bg-black text-white min-h-screen">
       {/* Video Controls Header */}
-      <div className="bg-[#232323]900 border-b border-gray-700 px-4 py-2 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+      <div className="bg-gray-900 border-b border-gray-700 px-4 py-2 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
         <div className="flex items-center gap-2 sm:gap-4">
           <button 
             onClick={() => setIsPlaying(!isPlaying)}
-            className="p-2 hover:bg-[#232323]800 rounded"
+            className="p-2 hover:bg-gray-800 rounded"
           >
             {isPlaying ? <Pause className="w-4 h-4 sm:w-5 sm:h-5" /> : <Play className="w-4 h-4 sm:w-5 sm:h-5" />}
           </button>
-          <button className="p-2 hover:bg-[#232323]800 rounded">
+          <button className="p-2 hover:bg-gray-800 rounded">
             <SkipBack className="w-3 h-3 sm:w-4 sm:h-4" />
           </button>
-          <button className="p-2 hover:bg-[#232323]800 rounded">
+          <button className="p-2 hover:bg-gray-800 rounded">
             <SkipForward className="w-3 h-3 sm:w-4 sm:h-4" />
           </button>
           <div className="text-xs sm:text-sm font-mono">
@@ -230,14 +260,14 @@ export default function IncidentTimeline() {
         
         <div className="flex items-center gap-2 sm:gap-4">
           <div className="text-xs sm:text-sm">1x</div>
-          <button className="p-2 hover:bg-[#232323]800 rounded">
+          <button className="p-2 hover:bg-gray-800 rounded">
             <Volume2 className="w-3 h-3 sm:w-4 sm:h-4" />
           </button>
         </div>
       </div>
 
       {/* SVG Ruler */}
-      <div className="bg-[#232323]900 border-b border-gray-700 overflow-hidden" ref={containerRef}>
+      <div className="bg-gray-900 border-b border-gray-700 overflow-hidden" ref={containerRef}>
         <div className="w-full relative">
           <svg
             ref={rulerRef}
@@ -300,16 +330,16 @@ export default function IncidentTimeline() {
               let color = "#6b7280";
               switch (inc.type) {
                 case "Gun Threat":
-                  color = "#dc2626";
+                  color = "#f87171";
                   break;
                 case "Unauthorised Access":
-                  color = "#ea580c";
+                  color = "#fbbf24";
                   break;
                 case "Face Recognised":
-                  color = "#6b7280"; // Changed from blue to gray
+                  color = "#60a5fa";
                   break;
-                case "Traffic congestion":
-                  color = "#0d9488";
+                case "Traffic Congestion":
+                  color = "#34d399";
                   break;
               }
               
@@ -358,17 +388,17 @@ export default function IncidentTimeline() {
       </div>
 
       {/* Timeline Container */}
-      <div className="border-l border-r border-b border-gray-700 bg-[#232323]900">
+      <div className="border-l border-r border-b border-gray-700 bg-black">
         {/* Camera List Header */}
-        <div className="px-4 py-3 border-b border-gray-700 bg-[#232323]800">
+        <div className="px-4 py-3 border-b border-gray-700 bg-black">
           <h3 className="text-sm font-medium text-gray-300">Camera List</h3>
         </div>
         
         <div className="overflow-hidden">
           <div className="w-full">
             {/* Time Ruler */}
-            <div className="relative h-12 border-b border-gray-700 bg-[#232323]">
-              <div className="absolute top-0 left-0 w-24 sm:w-32 h-full bg-[#232323] border-r border-gray-700 z-10"></div>
+            <div className="relative h-12 border-b border-gray-700 bg-black">
+              <div className="absolute top-0 left-0 w-24 sm:w-32 h-full bg-black border-r border-gray-700 z-10"></div>
               <div className="absolute top-0 left-24 sm:left-32 right-0 flex">
                 {HOURS.map(h => (
                   <div key={h} className="relative flex-1 h-full border-r border-gray-600 last:border-r-0">
@@ -390,8 +420,8 @@ export default function IncidentTimeline() {
 
             {/* Camera Rows */}
             {cameras.map((cam, index) => (
-              <div key={cam} className="relative flex items-center h-12 sm:h-16 border-b border-gray-700 hover:bg-[#232323]800/50 transition-colors">
-                <div className="w-24 sm:w-32 flex-shrink-0 px-2 sm:px-4 text-gray-200 font-medium flex items-center gap-1 sm:gap-2 border-r border-gray-700 bg-[#232323]900">
+              <div key={cam} className="relative flex items-center h-20 sm:h-17 border-b border-gray-700 hover:bg-gray-800/50 transition-colors">
+                <div className="w-24 sm:w-32 flex-shrink-0 px-2 sm:px-2.5 text-gray-200 font-medium flex items-center gap-1 sm:gap-2 border-r border-gray-700 bg-gray-900">
                   <Camera className="w-3 h-3 sm:w-4 sm:h-4 text-gray-400" />
                   <span className="text-xs sm:text-sm">Camera - {String(index + 1).padStart(2, '0')}</span>
                 </div>
@@ -400,18 +430,24 @@ export default function IncidentTimeline() {
                     const containerWidth = containerRef.current?.getBoundingClientRect().width || 1;
                     const timelineWidth = containerWidth - (window.innerWidth < 640 ? 96 : 128);
                     const left = `${(getOffset(inc.tsStart, timelineWidth) / timelineWidth) * 100}%`;
-                    const right = `${(getOffset(inc.tsEnd, timelineWidth) / timelineWidth) * 100}%`;
-                    const width = `${Math.max(((getOffset(inc.tsEnd, timelineWidth) - getOffset(inc.tsStart, timelineWidth)) / timelineWidth) * 100, 2)}%`;
+                    const widthPercent = Math.max(((getOffset(inc.tsEnd, timelineWidth) - getOffset(inc.tsStart, timelineWidth)) / timelineWidth) * 100, 15);
+                    const width = `${widthPercent}%`;
                     const colorClass = getIncidentColor(inc.type);
+                    
+                    // Calculate available width in pixels for text
+                    const availableWidthPx = (widthPercent / 100) * timelineWidth;
+                    const displayText = getDisplayText(inc.type, availableWidthPx);
                     
                     return (
                       <div
                         key={inc.id}
-                        className={`absolute top-1 sm:top-2 h-8 sm:h-12 px-1 sm:px-2 flex items-center text-xs font-medium text-white rounded border ${colorClass} ${inc.resolved ? "opacity-50" : "opacity-100"} hover:opacity-80 transition-opacity cursor-pointer min-w-[24px]`}
-                        style={{ left, width }}
+                        className={`absolute top-3 sm:top-4 h-14 sm:h-8 px-3 sm:px-4 flex items-center text-sm sm:text-base font-medium rounded-2xl shadow-sm ${colorClass} ${inc.resolved ? "opacity-60" : "opacity-100"} hover:opacity-80 transition-all cursor-pointer`}
+                        style={{ left, width, minWidth: '120px' }}
                         title={`${inc.type} - ${inc.camera.name}`}
                       >
-                        <span className="truncate text-xs">{inc.type}</span>
+                        <span className="whitespace-nowrap overflow-hidden text-ellipsis font-medium">
+                          {displayText}
+                        </span>
                       </div>
                     );
                   })}
